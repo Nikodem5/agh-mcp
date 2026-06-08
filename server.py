@@ -30,10 +30,9 @@ MCP_TOKEN    = os.environ.get("MCP_TOKEN")    # optional; only used for future n
 mcp = FastMCP(
     "agh-mail",
     instructions=(
-        "Tools for reading and sending email via the AGH University mailbox. "
-        "Always call get_unread_emails first for a morning briefing. "
-        "Use get_email_body only when you need the full content of a specific message. "
-        "Never send email without explicit user confirmation."
+        "Narzędzia do czytania i wysyłania poczty ze skrzynki AGH. "
+        "Używaj get_email_body tylko wtedy, gdy potrzebujesz pełnej treści konkretnej wiadomości. "
+        "Nigdy nie wysyłaj maila bez wyraźnego potwierdzenia użytkownika."
     ),
 )
 
@@ -99,9 +98,9 @@ def get_unread_emails(
     max_results: int = 20,
 ) -> str:
     """
-    Return a list of unread emails (sender, subject, date, short preview).
-    Use this for the morning briefing. Default folder is INBOX.
-    Returns JSON array of message objects with uid, from, subject, date, preview.
+    Zwraca listę nieprzeczytanych maili (nadawca, temat, data, krótki podgląd).
+    Domyślny folder to INBOX.
+    Zwraca tablicę JSON z obiektami wiadomości zawierającymi uid, from, subject, date, preview.
     """
     conn = _connect_imap()
     try:
@@ -136,9 +135,9 @@ def get_unread_emails(
 @mcp.tool()
 def get_email_body(uid: str, folder: str = "INBOX") -> str:
     """
-    Fetch the full body of a specific email by its UID.
-    Get the UID from get_unread_emails or search_emails first.
-    Returns JSON with full headers and body text.
+    Pobiera pełną treść konkretnego maila na podstawie jego UID.
+    Najpierw uzyskaj UID z get_unread_emails lub search_emails.
+    Zwraca JSON z pełnymi nagłówkami i treścią wiadomości.
     """
     conn = _connect_imap()
     try:
@@ -168,9 +167,9 @@ def search_emails(
     max_results: int = 10,
 ) -> str:
     """
-    Search emails by sender address, subject keyword, and/or date.
-    since_date format: YYYY-MM-DD (e.g. '2025-09-01').
-    Returns JSON array with uid, from, subject, date, preview.
+    Wyszukuje maile po adresie nadawcy, słowie kluczowym w temacie i/lub dacie.
+    Format since_date: YYYY-MM-DD (np. '2025-09-01').
+    Zwraca tablicę JSON z uid, from, subject, date, preview.
     """
     conn = _connect_imap()
     try:
@@ -216,8 +215,7 @@ def search_emails(
 @mcp.tool()
 def mark_as_read(uid: str, folder: str = "INBOX") -> str:
     """
-    Mark a specific email as read (sets the \\Seen flag).
-    Call this after processing a message in the morning briefing.
+    Oznacza konkretny mail jako przeczytany (ustawia flagę \\Seen).
     """
     conn = _connect_imap()
     try:
@@ -236,9 +234,9 @@ def send_email(
     reply_to_uid: Optional[str] = None,
 ) -> str:
     """
-    Send an email from your AGH address.
-    IMPORTANT: Only call this after the user has explicitly confirmed the content.
-    reply_to_uid: if replying, provide the UID to set correct threading headers.
+    Wysyła maila z adresu AGH.
+    WAŻNE: Wywołuj to dopiero po wyraźnym potwierdzeniu treści przez użytkownika.
+    reply_to_uid: w przypadku odpowiedzi podaj UID, aby ustawić poprawne nagłówki wątku.
     """
     msg = MIMEMultipart("alternative")
     msg["From"]    = AGH_EMAIL
@@ -277,8 +275,8 @@ def send_email(
 @mcp.tool()
 def get_folders() -> str:
     """
-    List all IMAP folders in the AGH mailbox.
-    Useful for finding where specific mail (spam, sent, etc.) lives.
+    Wyświetla wszystkie foldery IMAP w skrzynce AGH.
+    Przydatne do znalezienia, gdzie znajduje się konkretna poczta (spam, wysłane itp.).
     """
     conn = _connect_imap()
     try:
